@@ -19,9 +19,6 @@ public class Test2 {
 
         Calendar c = Calendar.getInstance();
         c.setTime(converMills2Date(current));
-        c.set(Calendar.HOUR,0);
-        c.set(Calendar.MINUTE,0);
-        c.set(Calendar.SECOND,0);
 
         int actualMaximum = c.getActualMaximum(Calendar.DATE); //每个月的最后一天
         int actualMinimum = c.getActualMinimum(Calendar.DATE); //每个月的第一天
