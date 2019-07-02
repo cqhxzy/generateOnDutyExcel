@@ -1,6 +1,7 @@
 package com.hxzy.biz;
 
 import com.hxzy.bean.Holiday;
+import com.hxzy.util.StringUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,11 +13,20 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DutyDateGenerator {
+    /**
+     * 日期格式：yyyy-MM
+     * @param dateStr
+     * @return
+     */
     public static List<Date> getDudyDate(String dateStr) {
+
+        StringUtil.validateDateStr(dateStr);
+
         List<Date> list = new ArrayList<>();
 
         Calendar c = Calendar.getInstance(); //获取当前日期
-        Date date = converStr2Date(dateStr);
+
+        Date date = StringUtil.formatStr2DateMonth(dateStr); //将日期字符串转换为日期
         c.setTime(date);
 
         int actualMaximum = c.getActualMaximum(Calendar.DATE); //每个月的最后一天
@@ -104,20 +114,5 @@ public class DutyDateGenerator {
                 );
     }
 
-    public static String formatDate(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd E");
-        String format = sdf.format(date);
-        return format;
-    }
 
-    public static Date converStr2Date(String string) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date parse = sdf.parse(string);
-            return parse;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 }

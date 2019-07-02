@@ -1,6 +1,7 @@
 package com.hxzy.biz;
 
 
+import com.hxzy.util.StringUtil;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -11,9 +12,9 @@ public class DutyDateGeneratorTest {
 
     @Test
     public void getDudyDate() {
-        List<Date> dudyDate = DutyDateGenerator.getDudyDate("2019-8-1");
+        List<Date> dudyDate = DutyDateGenerator.getDudyDate("2019-08");
         dudyDate.forEach(t->
-            System.out.println(DutyDateGenerator.formatDate(t))
+            System.out.println(StringUtil.formatDate(t))
         );
     }
 
