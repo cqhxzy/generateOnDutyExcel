@@ -11,7 +11,7 @@ public class DutyDateGeneratorTest {
 
     @Test
     public void getDudyDate() {
-        List<Date> dudyDate = DutyDateGenerator.getDudyDate("2019-7-1");
+        List<Date> dudyDate = DutyDateGenerator.getDudyDate("2019-8-1");
         dudyDate.forEach(t->
             System.out.println(DutyDateGenerator.formatDate(t))
         );

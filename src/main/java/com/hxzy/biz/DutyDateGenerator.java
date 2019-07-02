@@ -55,10 +55,33 @@ public class DutyDateGenerator {
     }
 
     private static boolean isNotHoliday(Date date) {
+        //System.out.println(HolidaysTransfer.converMills2DateStr(date.getTime()));
         List<Holiday> holiday = LegalHoliday.getInstance().getHoliday();
-        return !holiday.stream().anyMatch(t ->
-                date.getTime() >= t.getFrom() && date.getTime() <= t.getTo()
-        );
+        return !holiday.stream()
+                .map(t -> {
+                    try {
+                        //此处使用原型模式得到holiday对象
+                        //法定假日后的上班时间为配置文件中to对应日期+1天
+                        Holiday clone = t.clone();
+                        Calendar instance = Calendar.getInstance();
+                        instance.setTimeInMillis(clone.getTo());
+                        instance.add(Calendar.DATE, 1);
+                        clone.setTo(instance.getTimeInMillis());
+                        return clone;
+                    } catch (CloneNotSupportedException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                })
+                /*.peek(t -> {
+                    System.out.println(HolidaysTransfer.converMills2DateStr(t.getFrom()));
+                    System.out.println(HolidaysTransfer.converMills2DateStr(t.getTo()));
+                    System.out.println();
+                })*/
+                .anyMatch(t ->
+                        //在这个表达式范围内的日期为放假日期
+                        date.getTime() >= t.getFrom() && date.getTime() < t.getTo()
+                );
     }
 
     public static boolean isWorkOnHoliday(Date date) {

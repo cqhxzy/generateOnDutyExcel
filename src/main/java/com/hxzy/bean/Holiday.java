@@ -3,7 +3,7 @@ package com.hxzy.bean;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Holiday {
+public class Holiday implements Cloneable{
 	private long from;
 	private long to;
 	private String detail;
@@ -24,6 +24,13 @@ public class Holiday {
 	}
 	public void setDetail(String detail) {
 		this.detail = detail;
+	}
+
+	@Override
+	public Holiday clone() throws CloneNotSupportedException {
+
+		Holiday holiday = (Holiday) super.clone();
+		return holiday;
 	}
 
 	@Override
