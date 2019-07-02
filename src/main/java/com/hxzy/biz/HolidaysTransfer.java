@@ -1,6 +1,7 @@
-package com.hxzy.util;
+package com.hxzy.biz;
 
 import com.hxzy.bean.Holiday;
+import com.hxzy.util.PropertyUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class Utils {
+public abstract class HolidaysTransfer {
     protected List<Holiday> holidays;
     private String path;
 
@@ -17,7 +18,7 @@ public abstract class Utils {
         return path;
     }
 
-    public Utils(String path) {
+    public HolidaysTransfer(String path) {
         this.path = path;
     }
 

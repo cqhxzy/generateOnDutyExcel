@@ -1,13 +1,13 @@
-package com.hxzy.util;
+package com.hxzy.biz;
 
 
 import com.hxzy.bean.Holiday;
+import com.hxzy.util.PropertyUtil;
 
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class WorkOnHolidays extends Utils {
+public class WorkOnHolidays extends HolidaysTransfer {
     private WorkOnHolidays(){
         super("/workOnHolidays.properties");
     }

@@ -1,8 +1,6 @@
 package com.hxzy.biz;
 
 import com.hxzy.bean.Holiday;
-import com.hxzy.util.HolidayUtil;
-import com.hxzy.util.WorkOnHolidays;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -57,7 +55,7 @@ public class DutyDateGenerator {
     }
 
     private static boolean isNotHoliday(Date date) {
-        List<Holiday> holiday = HolidayUtil.getInstance().getHoliday();
+        List<Holiday> holiday = LegalHoliday.getInstance().getHoliday();
         return !holiday.stream().anyMatch(t ->
                 date.getTime() >= t.getFrom() && date.getTime() <= t.getTo()
         );
