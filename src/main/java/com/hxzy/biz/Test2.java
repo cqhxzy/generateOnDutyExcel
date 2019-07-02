@@ -29,7 +29,7 @@ public class Test2 {
         current = c.getTimeInMillis(); //得到第一天的毫秒
         list.add(converMills2Date(current)); //将毫秒转换为日期对象
 
-        List<Date> list2 = Stream.generate((Supplier<Date>) () -> {
+        List<Date> list2 = Stream.generate(() -> {
             Date instance = converMills2Date(current);
             c.setTime(instance);
             c.add(Calendar.DATE, 1);
