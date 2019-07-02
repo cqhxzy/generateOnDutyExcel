@@ -55,7 +55,6 @@ public class DutyDateGenerator {
     }
 
     private static boolean isNotHoliday(Date date) {
-        //System.out.println(HolidaysTransfer.converMills2DateStr(date.getTime()));
         List<Holiday> holiday = LegalHoliday.getInstance().getHoliday();
         return !holiday.stream()
                 .map(t -> {
