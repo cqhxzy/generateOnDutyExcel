@@ -1,21 +1,23 @@
 package com.hxzy.bean;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Holiday {
-	private Date from;
-	private Date to;
+	private long from;
+	private long to;
 	private String detail;
-	public Date getFrom() {
+	public long getFrom() {
 		return from;
 	}
-	public void setFrom(Date from) {
+	public void setFrom(long from) {
 		this.from = from;
 	}
-	public Date getTo() {
+	public long getTo() {
 		return to;
 	}
-	public void setTo(Date to) {
+	public void setTo(long to) {
 		this.to = to;
 	}
 	public String getDetail() {
@@ -27,9 +29,14 @@ public class Holiday {
 
 	@Override
 	public String toString() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date dateFrom = new Date(from);
+		String str_from = sdf.format(dateFrom);
+		Date dateTo = new Date(to);
+		String str_to = sdf.format(dateTo);
 		return "Holiday{" +
-				"from=" + from +
-				", to=" + to +
+				"from=" + str_from +
+				", to=" + str_to +
 				", detail='" + detail + '\'' +
 				'}';
 	}

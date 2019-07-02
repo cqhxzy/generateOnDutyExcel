@@ -6,17 +6,13 @@ import java.io.*;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PropertyUtil {
 
-	private static Collection<Object> holidays;
-	private static List<Holiday> holiday;
+	private static Collection<Object> holidays_str;
+	private static List<Holiday> holidays;
 	
 	static{
 		Properties prop = new Properties();
@@ -24,8 +20,7 @@ public class PropertyUtil {
 			InputStream inputStream = PropertyUtil.class.getResourceAsStream("/holidays.properties");
 			InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
 			prop.load(inputStreamReader);
-			holidays = prop.values();
-			//holidays.stream().forEach(System.out::println);
+			holidays_str = prop.values();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -37,58 +32,48 @@ public class PropertyUtil {
 		holiday.forEach(System.out::println);
 	}
 	public static List<Holiday> getHoliday() {
-		if (holiday == null) {
+		if (holidays == null) {
 			setHoliday();
 		}
-		return holiday;
+		return holidays;
 	}
 	private static void setHoliday() {
-		holidays.stream().forEach(t -> {
+		holidays = holidays_str.stream().map((t)->{
 			String str = (String)t;
 			String[] split = str.split("\\s+");
-			System.out.println(Arrays.toString(split));
-			holiday = Arrays.stream(split).map((k) -> {
-				Holiday holiday = new Holiday();
+			Holiday holiday = new Holiday();
+			for (int i = 0; i < split.length; i++) {
+				String k = split[i];
 				if (k.indexOf("from") != -1) {
-					String substring = k.substring(6);
-					holiday.setFrom(convertStr2Date(substring));
+					String from = k.substring(k.indexOf(":") + 1);
+					long l = convertStr2TimeMills(from);
+					Calendar instance = Calendar.getInstance();
+					instance.setTimeInMillis(l); //假日截止日的第二天开始上班
+					instance.add(Calendar.DATE,1);
+
+					holiday.setFrom(instance.getTimeInMillis());
 				}
 				if (k.indexOf("to") != -1) {
-					String substring = k.substring(k.indexOf("to") + 3);
-					holiday.setTo(convertStr2Date(substring));
+					String to = k.substring(k.indexOf(":") + 1);
+					holiday.setTo(convertStr2TimeMills(to));
 				}
 				if (k.indexOf("detail") != -1) {
-					String substring = k.substring(k.indexOf("detail") + 7);
-					holiday.setDetail(substring);
+					String detail = k.substring(k.indexOf(":") + 1);
+					holiday.setDetail(detail);
 				}
-				return holiday;
-			}).collect(Collectors.toList());
-			/*Arrays.stream(split).forEach(j->{
-				if (j.indexOf("from") != -1) {
-					String substring = j.substring(6);
-					holiday.setFrom(convertStr2Date(substring));
-				}
-				if (j.indexOf("to") != -1) {
-					String substring = j.substring(j.indexOf("to") + 3);
-					holiday.setTo(convertStr2Date(substring));
-				}
-				if (j.indexOf("detail") != -1) {
-					String substring = j.substring(j.indexOf("detail") + 7);
-					holiday.setDetail(substring);
-				}
-			});
-			holidays.add(holiday);*/
-		});
+			}
+			return holiday;
+		}).collect(Collectors.toList());
 	}
 	
-	private static Date convertStr2Date(String str){
+	public static long convertStr2TimeMills(String str){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			return sdf.parse(str);
+			return sdf.parse(str).getTime();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return 0;
 	}
 	
 }
