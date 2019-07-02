@@ -3,6 +3,7 @@ package com.hxzy.biz;
 import com.hxzy.bean.Holiday;
 import com.hxzy.util.PropertyUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,7 +45,7 @@ public class Test2 {
                 .filter(t -> isNotWeekDay(t))  //排除周末
                 .filter(t -> isNotHoliday(t))  //排除法定节日
                 .forEach(t ->
-                        System.out.println(t)
+                        System.out.println(formatDate(t))
                 );
     }
 
@@ -62,5 +63,10 @@ public class Test2 {
     private static boolean isNotHoliday(Date date){
         List<Holiday> holiday = PropertyUtil.getHoliday();
         return !holiday.stream().anyMatch(t -> date.getTime() >= t.getFrom() && date.getTime() <= t.getTo());
+    }
+    private static String formatDate(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd E");
+        String format = sdf.format(date);
+        return format;
     }
 }

@@ -46,16 +46,16 @@ public class PropertyUtil {
 				String k = split[i];
 				if (k.indexOf("from") != -1) {
 					String from = k.substring(k.indexOf(":") + 1);
-					long l = convertStr2TimeMills(from);
-					Calendar instance = Calendar.getInstance();
-					instance.setTimeInMillis(l); //假日截止日的第二天开始上班
-					instance.add(Calendar.DATE,1);
-
-					holiday.setFrom(instance.getTimeInMillis());
+					holiday.setFrom(convertStr2TimeMills(from));
 				}
 				if (k.indexOf("to") != -1) {
 					String to = k.substring(k.indexOf(":") + 1);
-					holiday.setTo(convertStr2TimeMills(to));
+
+					long l = convertStr2TimeMills(to);
+					Calendar instance = Calendar.getInstance();
+					instance.setTimeInMillis(l); //假日截止日的第二天开始上班
+					instance.add(Calendar.DATE,1);
+					holiday.setTo(instance.getTimeInMillis());
 				}
 				if (k.indexOf("detail") != -1) {
 					String detail = k.substring(k.indexOf(":") + 1);
