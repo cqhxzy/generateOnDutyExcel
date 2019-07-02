@@ -3,6 +3,7 @@ package com.hxzy.biz;
 import com.hxzy.bean.Holiday;
 import com.hxzy.util.PropertyUtil;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,11 +12,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Test2 {
-    public static void main(String[] args) {
+public class DutyDateGenerator {
+    public static List<Date> getDudyDate(String dateStr) {
         List<Date> list = new ArrayList<>();
 
         Calendar c = Calendar.getInstance(); //获取当前日期
+        Date date = converStr2Date(dateStr);
+        c.setTime(date);
 
         int actualMaximum = c.getActualMaximum(Calendar.DATE); //每个月的最后一天
         int actualMinimum = c.getActualMinimum(Calendar.DATE); //每个月的第一天
@@ -35,12 +38,11 @@ public class Test2 {
 
         list.addAll(list2); //合并集合
 
-        list.stream()
+        List<Date> collect = list.stream()
                 .filter(t -> isNotWeekDay(t))  //排除周末
                 .filter(t -> isNotHoliday(t))  //排除法定节日
-                .forEach(t ->
-                        System.out.println(formatDate(t))
-                );
+                .collect(Collectors.toList());
+        return collect;
     }
 
     private static Date converMills2Date(long current) {
@@ -58,9 +60,20 @@ public class Test2 {
         List<Holiday> holiday = PropertyUtil.getHoliday();
         return !holiday.stream().anyMatch(t -> date.getTime() >= t.getFrom() && date.getTime() <= t.getTo());
     }
-    private static String formatDate(Date date){
+    public static String formatDate(Date date){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd E");
         String format = sdf.format(date);
         return format;
+    }
+
+    public static Date converStr2Date(String string) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date parse = sdf.parse(string);
+            return parse;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

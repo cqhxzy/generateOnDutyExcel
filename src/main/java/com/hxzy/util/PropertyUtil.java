@@ -27,10 +27,7 @@ public class PropertyUtil {
 			e.printStackTrace();
 		}
 	}
-	public static void main(String[] args) {
-		List<Holiday> holiday = getHoliday();
-		holiday.forEach(System.out::println);
-	}
+
 	public static List<Holiday> getHoliday() {
 		if (holidays == null) {
 			setHoliday();
