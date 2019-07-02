@@ -1,7 +1,8 @@
 package com.hxzy.biz;
 
 import com.hxzy.bean.Holiday;
-import com.hxzy.util.PropertyUtil;
+import com.hxzy.util.HolidayUtil;
+import com.hxzy.util.WorkOnHolidays;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,8 +40,12 @@ public class DutyDateGenerator {
         list.addAll(list2); //合并集合
 
         List<Date> collect = list.stream()
-                .filter(t -> isNotWeekDay(t))  //排除周末
-                .filter(t -> isNotHoliday(t))  //排除法定节日
+                //.filter(t -> isWorkOnHoliday(t)) //排除周末补班的情况
+                //.filter(t -> isNotWeekDay(t))  //排除周末
+                //.filter(t -> isNotHoliday(t))  //排除法定节日
+                .filter(t ->
+                        isWorkOnHoliday(t) || isNotWeekDay(t) && isNotHoliday(t)
+                )
                 .collect(Collectors.toList());
         return collect;
     }
@@ -50,17 +55,41 @@ public class DutyDateGenerator {
         return date;
     }
 
-    private static boolean isNotWeekDay(Date date){
+    private static boolean isNotWeekDay(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY;
     }
 
-    private static boolean isNotHoliday(Date date){
-        List<Holiday> holiday = PropertyUtil.getHoliday();
-        return !holiday.stream().anyMatch(t -> date.getTime() >= t.getFrom() && date.getTime() <= t.getTo());
+    private static boolean isNotHoliday(Date date) {
+        List<Holiday> holiday = HolidayUtil.getInstance().getHoliday();
+        return !holiday.stream().anyMatch(t ->
+                date.getTime() >= t.getFrom() && date.getTime() <= t.getTo()
+        );
     }
-    public static String formatDate(Date date){
+
+    public static boolean isWorkOnHoliday(Date date) {
+        List<Holiday> workDay = WorkOnHolidays.getInstance().getHoliday();
+
+        return workDay.stream()
+                .filter(t ->
+                        {
+                            Calendar c1 = Calendar.getInstance();
+                            Calendar c2 = Calendar.getInstance();
+                            Calendar c3 = Calendar.getInstance();
+
+                            c1.setTime(date);
+                            c2.setTimeInMillis(t.getFrom());
+                            c3.setTimeInMillis(t.getTo());
+                            return c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) || c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) - 1;
+                        }
+                )
+                .anyMatch(t ->
+                        date.getTime() >= t.getFrom() && date.getTime() <= t.getTo()
+                );
+    }
+
+    public static String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd E");
         String format = sdf.format(date);
         return format;
