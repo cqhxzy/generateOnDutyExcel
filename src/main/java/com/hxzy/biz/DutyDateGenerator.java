@@ -26,7 +26,7 @@ public class DutyDateGenerator {
 
         c.set(Calendar.DATE, actualMinimum);// 每个月的1号为值班起点
 
-        list.add(converMills2Date(c.getTimeInMillis())); //将毫秒转换为日期对象
+        list.add(c.getTime());
 
         List<Date> list2 = Stream.generate(() -> {
 
@@ -48,11 +48,6 @@ public class DutyDateGenerator {
                 )
                 .collect(Collectors.toList());
         return collect;
-    }
-
-    private static Date converMills2Date(long current) {
-        Date date = new Date(current);
-        return date;
     }
 
     private static boolean isNotWeekDay(Date date) {
