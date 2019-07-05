@@ -62,11 +62,19 @@ public class DutyListGenerator {
             dutyLists.add(duty);
         }*/
         int date2_index = 15;
-        int item2_index = index + dutyItems.size() / 2;
+        int item2_index = 0;
+
+        if (dutyItems.size() > 15){
+            item2_index = dutyItems.size() - 15;
+        } else {
+            item2_index = (15 + index) % dutyItems.size();
+        }
+
+
         for (int i = 0; i < 15 ; i++) {
-            if (index >= dutyItems.size() / 2) index = 0;
+            if (index >= dutyItems.size()) index = 0;
             Date date = dutyDate.get(i);
-            DutyItem dutyItem = dutyItems.get(index);
+            DutyItem dutyItem = dutyItems.get(index++);
 
             String date1 = StringUtil.formatDate(date);
             String item1 = dutyItem.toString();
@@ -81,13 +89,11 @@ public class DutyListGenerator {
 
 
                 if (item2_index >= dutyItems.size()) {
-                    item2_index = index + dutyItems.size() / 2;
+                    item2_index = 0;
                 }
-                item2 = dutyItems.get(item2_index).toString();
+                item2 = dutyItems.get(item2_index++).toString();
             }
 
-            index++;
-            item2_index++;
             DutyList duty = new DutyList(item1,date1,item2,date2);
             dutyLists.add(duty);
         }

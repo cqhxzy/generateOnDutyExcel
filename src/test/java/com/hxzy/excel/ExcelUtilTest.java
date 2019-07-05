@@ -33,9 +33,9 @@ public class ExcelUtilTest {
     @Test
     public void test3(){
         List<DutyList> dutyList = DutyListGenerator.getDutyList("2019-07");
-        dutyList.forEach(System.out::println);
-        /*String filePath = "E://值班名单.xlsx";
-        ExcelUtil.writeWithTemplate(filePath,dutyList);*/
+        //dutyList.forEach(System.out::println);
+        String filePath = "E://值班名单.xlsx";
+        ExcelUtil.writeWithTemplate(filePath,dutyList);
 
     }
 }
