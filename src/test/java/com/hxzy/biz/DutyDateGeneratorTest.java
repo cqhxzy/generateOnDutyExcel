@@ -1,6 +1,7 @@
 package com.hxzy.biz;
 
 
+import com.hxzy.biz.workDays.DutyDateGenerator;
 import com.hxzy.util.StringUtil;
 import org.junit.Test;
 
@@ -21,7 +22,7 @@ public class DutyDateGeneratorTest {
     @Test
     public void isWorkOnHoliday() {
         Calendar c = Calendar.getInstance();
-        c.set(2019,Calendar.JULY,7);
+        c.set(2019,Calendar.AUGUST,3);
 
         boolean workOnHoliday = DutyDateGenerator.isWorkOnHoliday(c.getTime());
         System.out.println(workOnHoliday);

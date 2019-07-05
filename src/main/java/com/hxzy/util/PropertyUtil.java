@@ -4,19 +4,36 @@ import java.io.*;
 import java.util.*;
 
 public class PropertyUtil {
-
-	public static  Collection getValues(String path){
-		Properties prop = new Properties();
+	public static final String KEY_INDEX = "index";
+	private static final Properties prop = new Properties();
+	private static final String PATH = PropertyUtil.class.getResource("/config.properties").getPath();
+	static{
 		try {
-			InputStream inputStream = PropertyUtil.class.getResourceAsStream(path);
+
+			InputStream inputStream = PropertyUtil.class.getResourceAsStream("/config.properties");
 			InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
 			prop.load(inputStreamReader);
-			return prop.values();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return null;
+	}
+
+	public static  String getValue(String key){
+		return (String) prop.get(key);
+	}
+
+	public static void saveObj(String key, String  value){
+		prop.setProperty(key, value);
+		save("更新" + key);
+	}
+
+	private static void save(String comments){
+		try {
+			prop.store(new FileWriter(PATH),comments);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

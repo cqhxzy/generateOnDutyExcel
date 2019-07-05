@@ -1,7 +1,7 @@
-package com.hxzy.biz;
+package com.hxzy.biz.workDays;
 
 import com.hxzy.bean.Holiday;
-import com.hxzy.util.PropertyUtil;
+import com.hxzy.util.CommonUtil;
 import com.hxzy.util.StringUtil;
 
 import java.util.Collection;
@@ -28,10 +28,9 @@ public abstract class HolidaysTransfer {
     }
 
     protected void setHoliday() {
-        Collection<Object> holidays_str = PropertyUtil.getValues(this.path);
+        Collection<String> holidays_str = CommonUtil.getValues(this.path);
         holidays = holidays_str.stream().map((t)->{
-            String str = (String)t;
-            String[] split = str.split("\\s+");
+            String[] split = t.split("\\s+");
             Holiday holiday = new Holiday();
             for (int i = 0; i < split.length; i++) {
                 String k = split[i];

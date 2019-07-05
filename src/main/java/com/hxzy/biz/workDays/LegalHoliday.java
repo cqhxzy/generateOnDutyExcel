@@ -1,10 +1,10 @@
-package com.hxzy.biz;
+package com.hxzy.biz.workDays;
 
 
 public class LegalHoliday extends HolidaysTransfer {
 
     private LegalHoliday(){
-        super("/holidays.properties");
+        super("/holidays");
     }
     private static LegalHoliday instance = new LegalHoliday();
 
