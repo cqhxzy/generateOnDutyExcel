@@ -6,6 +6,7 @@ import com.hxzy.biz.workDays.DutyDateGenerator;
 import com.hxzy.util.PropertyUtil;
 import com.hxzy.util.StringUtil;
 import com.hxzy.util.XmlUtil;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
@@ -43,7 +44,7 @@ public class DutyListGenerator {
 
     public static List<DutyList> getDutyList(String dateStr){
         //获取值班日期
-        List<Date> dudyDate = DutyDateGenerator.getDudyDate(dateStr);
+        List<Date> dutyDate = DutyDateGenerator.getDudyDate(dateStr);
 
         //获取值班人员名单
         List<DutyItem> dutyItems = getDutyItems();
@@ -52,12 +53,48 @@ public class DutyListGenerator {
         int index = Integer.parseInt(PropertyUtil.getValue("index"));
 
         List<DutyList> dutyLists =new ArrayList<>();
-        for (int i = 0; i < dudyDate.size() ; i++) {
+        /*for (int i = 0; i < dudyDate.size() ; i++) {
             if (index >= dutyItems.size()) index = 0;
             Date date = dudyDate.get(i);
             DutyItem dutyItem = dutyItems.get(index++);
 
-            DutyList duty = new DutyList(date, dutyItem);
+            DutyList duty = new DutyList(StringUtil.formatDate(date), dutyItem.toString());
+            dutyLists.add(duty);
+        }*/
+        int date2_index = 15;
+        int item2_index = 0;
+
+        if (dutyItems.size() > 15){
+            item2_index = dutyItems.size() - 15;
+        } else {
+            item2_index = (15 + index) % dutyItems.size();
+        }
+
+
+        for (int i = 0; i < 15 ; i++) {
+            if (index >= dutyItems.size()) index = 0;
+            Date date = dutyDate.get(i);
+            DutyItem dutyItem = dutyItems.get(index++);
+
+            String date1 = StringUtil.formatDate(date);
+            String item1 = dutyItem.toString();
+
+            String date2 = "";
+            String item2 = "";
+
+
+            if (date2_index < dutyDate.size()){
+                Date duty_date2 = dutyDate.get(date2_index++);
+                date2 = StringUtil.formatDate(duty_date2);
+
+
+                if (item2_index >= dutyItems.size()) {
+                    item2_index = 0;
+                }
+                item2 = dutyItems.get(item2_index++).toString();
+            }
+
+            DutyList duty = new DutyList(item1,date1,item2,date2);
             dutyLists.add(duty);
         }
 
