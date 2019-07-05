@@ -99,7 +99,7 @@ public class DutyListGenerator {
         }
 
         //将index写回文件
-        PropertyUtil.saveObj(PropertyUtil.KEY_INDEX,String.valueOf(index));
+        PropertyUtil.saveObj(PropertyUtil.KEY_INDEX,String.valueOf(item2_index));
         return dutyLists;
     }
 
