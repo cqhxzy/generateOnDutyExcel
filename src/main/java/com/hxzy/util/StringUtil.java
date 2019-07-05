@@ -22,6 +22,13 @@ public class StringUtil {
         }
         return null;
     }
+
+    public static String formatDate2YearMonth(String str){
+        Date date = formatStr2DateMonth(str);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月");
+        return sdf.format(date);
+    }
+
     public static Date formatStr2DateMonth(String str){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
         Date parse = null;
