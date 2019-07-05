@@ -28,9 +28,9 @@ public class DutyDateGenerator {
         c.setTime(date);
 
         int actualMaximum = c.getActualMaximum(Calendar.DATE); //每个月的最后一天
-        int actualMinimum = c.getActualMinimum(Calendar.DATE); //每个月的第一天
+        //int actualMinimum = c.getActualMinimum(Calendar.DATE); //每个月的第一天
 
-        c.set(Calendar.DATE, actualMinimum);// 每个月的1号为值班起点
+        //c.set(Calendar.DATE, actualMinimum);// 每个月的1号为值班起点
 
         list.add(c.getTime());
 

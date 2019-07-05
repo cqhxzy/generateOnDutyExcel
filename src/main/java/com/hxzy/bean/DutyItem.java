@@ -1,15 +1,18 @@
 package com.hxzy.bean;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class DutyItem {
     private List<String> names;
 
     @Override
     public String toString() {
-        return "DutyItem{" +
-                "names=" + names +
-                '}';
+        if (names != null && names.size() > 0){
+            return names.stream().collect(Collectors.joining(","));
+        }
+        return null;
+
     }
 
     @Override
