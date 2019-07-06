@@ -18,6 +18,9 @@ import java.util.stream.Collectors;
  */
 public class DutyListGenerator {
 
+    //生成的EXCEL数据行数
+    private static final int EXCEL_ROW = 15;
+    
     /**
      * 从XML中解析出值班人员名单
      * @return
@@ -53,25 +56,18 @@ public class DutyListGenerator {
         int index = Integer.parseInt(PropertyUtil.getValue("index"));
 
         List<DutyList> dutyLists =new ArrayList<>();
-        /*for (int i = 0; i < dudyDate.size() ; i++) {
-            if (index >= dutyItems.size()) index = 0;
-            Date date = dudyDate.get(i);
-            DutyItem dutyItem = dutyItems.get(index++);
-
-            DutyList duty = new DutyList(StringUtil.formatDate(date), dutyItem.toString());
-            dutyLists.add(duty);
-        }*/
-        int date2_index = 15;
+       
+        int date2_index = EXCEL_ROW;
         int item2_index = 0;
 
-        if (dutyItems.size() > 15){
-            item2_index = dutyItems.size() - 15;
+        if (dutyItems.size() > EXCEL_ROW){
+            item2_index = dutyItems.size() - EXCEL_ROW;
         } else {
-            item2_index = (15 + index) % dutyItems.size();
+            item2_index = (EXCEL_ROW + index) % dutyItems.size();
         }
 
 
-        for (int i = 0; i < 15 ; i++) {
+        for (int i = 0; i < EXCEL_ROW ; i++) {
             if (index >= dutyItems.size()) index = 0;
             Date date = dutyDate.get(i);
             DutyItem dutyItem = dutyItems.get(index++);
