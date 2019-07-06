@@ -80,11 +80,6 @@ public class DutyDateGenerator {
                     }
                     return null;
                 })
-                /*.peek(t -> {
-                    System.out.println(HolidaysTransfer.converMills2DateStr(t.getFrom()));
-                    System.out.println(HolidaysTransfer.converMills2DateStr(t.getTo()));
-                    System.out.println();
-                })*/
                 .anyMatch(t ->
                         //在这个表达式范围内的日期为放假日期
                         date.getTime() >= t.getFrom() && date.getTime() < t.getTo()
@@ -104,7 +99,14 @@ public class DutyDateGenerator {
                             c1.setTime(date);
                             c2.setTimeInMillis(t.getFrom());
                             c3.setTimeInMillis(t.getTo());
-                            return c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) || c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) - 1;
+                            
+                            int date_month = c1.get(Calendar.MONTH);
+                            int c2_month = c2.get(Calendar.MONTH);
+                            int c3_month = c3.get(Calendar.MONTH);
+                            
+                            return date_month == c2_month && date_month == c3_month || date_month == c2_month && date_month == c3_month - 1; 
+                            
+                            //return c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) || c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) - 1;
                         }
                 )
                 .anyMatch(t ->
