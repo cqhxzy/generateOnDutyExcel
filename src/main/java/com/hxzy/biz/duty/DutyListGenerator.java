@@ -45,6 +45,14 @@ public class DutyListGenerator {
         return dutyItems;
     }
 
+    /**
+    * <p>根据字符串日期生成值班日期及人员</p>
+    * <p>值班日期生成算法：</p>
+    * <p>字符串日期，计算出该月所有的工作日至一个集合中</P>
+    * <p>工作日的定义：周末需要补班的，除了周末的及法定节日的均为工作日</p>
+    * @params dateStr 字符串格式的日期，格式为：<code>YYYY-MM</code>
+    * @return 每个DutyList内封装的是一行值班日期及值班人员信息
+    */
     public static List<DutyList> getDutyList(String dateStr){
         //获取值班日期
         List<Date> dutyDate = DutyDateGenerator.getDudyDate(dateStr);
@@ -57,7 +65,10 @@ public class DutyListGenerator {
 
         List<DutyList> dutyLists =new ArrayList<>();
        
+        //第二个值班日期列的起始索引
         int date2_index = EXCEL_ROW;
+        
+        //第二个值班人员列的起始索引
         int item2_index = 0;
 
         if (dutyItems.size() > EXCEL_ROW){
