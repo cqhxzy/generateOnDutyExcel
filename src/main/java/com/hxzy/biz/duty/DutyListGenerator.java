@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class DutyListGenerator {
 
     //生成的EXCEL数据行数
-    private static final int EXCEL_ROW = 15;
+    private static final int EXCEL_DEFAULT_ROW = 15;
     
     /**
      * 从XML中解析出值班人员名单
@@ -64,21 +64,26 @@ public class DutyListGenerator {
         int index = Integer.parseInt(PropertyUtil.getValue("index"));
 
         List<DutyList> dutyLists =new ArrayList<>();
-       
+
+        int excel_rows = EXCEL_DEFAULT_ROW;
+        if (dutyDate.size() < EXCEL_DEFAULT_ROW) {//这个月放假天数有点多
+            excel_rows = dutyDate.size();
+        }
+
         //第二个值班日期列的起始索引
-        int date2_index = EXCEL_ROW;
+        int date2_index = excel_rows;
         
         //第二个值班人员列的起始索引
         int item2_index = 0;
 
-        if (dutyItems.size() > EXCEL_ROW){
-            item2_index = dutyItems.size() - EXCEL_ROW;
+        if (dutyItems.size() > excel_rows){
+            item2_index = dutyItems.size() - excel_rows;
         } else {
-            item2_index = (EXCEL_ROW + index) % dutyItems.size();
+            item2_index = (excel_rows + index) % dutyItems.size();
         }
 
 
-        for (int i = 0; i < EXCEL_ROW ; i++) {
+        for (int i = 0; i < excel_rows ; i++) {
             if (index >= dutyItems.size()) index = 0;
             Date date = dutyDate.get(i);
             DutyItem dutyItem = dutyItems.get(index++);
@@ -104,6 +109,8 @@ public class DutyListGenerator {
             DutyList duty = new DutyList(item1,date1,item2,date2);
             dutyLists.add(duty);
         }
+
+        item2_index = dutyDate.size() < EXCEL_DEFAULT_ROW ? index : item2_index;
 
         //将index写回文件
         PropertyUtil.saveObj(PropertyUtil.KEY_INDEX,String.valueOf(item2_index));
