@@ -10,8 +10,8 @@ import java.util.stream.Stream;
 public class DutyDateGenerator {
     /**
      * 日期格式：yyyy-MM
-     * @param dateStr
-     * @return
+     * @param dateStr  生成值班的日期
+     * @return 值班日期
      */
     public static List<Date> getDudyDate(String dateStr) {
 
@@ -26,9 +26,9 @@ public class DutyDateGenerator {
 
         int actualMaximum = c.getActualMaximum(Calendar.DATE); //每个月的最后一天
 
-        int theFisrtDateOfMonth = findTheFirstDateOfMonth(c); //每个月的第一个工作日
+        int theFirstDateOfMonth = findTheFirstDateOfMonth(c); //每个月的第一个工作日
 
-        c.set(Calendar.DATE, theFisrtDateOfMonth);// 每个月的1号为值班起点
+        c.set(Calendar.DATE, theFirstDateOfMonth);// 每个月的1号为值班起点
 
         list.add(c.getTime());
 
@@ -38,12 +38,12 @@ public class DutyDateGenerator {
 
             return c.getTime();
         })
-                .limit(actualMaximum - theFisrtDateOfMonth)
+                .limit(actualMaximum - theFirstDateOfMonth)
                 .collect(Collectors.toList());
 
         list.addAll(list2); //合并集合
 
-        List<Date> collect = list.stream()
+        return list.stream()
                 //.filter(t -> isWorkOnHoliday(t)) //排除周末补班的情况
                 //.filter(t -> isNotWeekDay(t))  //排除周末
                 //.filter(t -> isNotHoliday(t))  //排除法定节日
@@ -51,7 +51,6 @@ public class DutyDateGenerator {
                         isWorkOnHoliday(t) || isNotWeekDay(t) && isNotHoliday(t)
                 )
                 .collect(Collectors.toList());
-        return collect;
     }
 
     private static boolean isNotWeekDay(Date date) {
@@ -124,13 +123,11 @@ public class DutyDateGenerator {
             long from = t.getFrom();
             instance.setTimeInMillis(from);
             int from_month = instance.get(Calendar.MONTH);
-            /**
+            /*
              * 放假持续到第二个月
              */
             return from_month == month - 1 && to_month == month;
-        }).sorted((t1, t2) -> {
-            return (int) (t1.getTo() - t2.getTo());
-        }).findFirst();
+        }).min((o1, o2) -> (int) (o1.getTo() - o2.getTo()));
 
         if (first.isPresent()) {
             long to = first.get().getTo();

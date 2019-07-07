@@ -32,7 +32,7 @@ public class DutyDateGeneratorTest {
     public void findTheFisrtDateOfMonth(){
         Calendar instance = Calendar.getInstance();
         instance.set(2019, Calendar.SEPTEMBER, 6);
-        int outTheFisrtDateOfMonth = DutyDateGenerator.findTheFisrtDateOfMonth(instance);
+        int outTheFisrtDateOfMonth = DutyDateGenerator.findTheFirstDateOfMonth(instance);
         System.out.println(outTheFisrtDateOfMonth);
     }
 }
