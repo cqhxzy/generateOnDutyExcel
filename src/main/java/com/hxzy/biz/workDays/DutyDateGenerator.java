@@ -3,10 +3,7 @@ package com.hxzy.biz.workDays;
 import com.hxzy.bean.Holiday;
 import com.hxzy.util.StringUtil;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,9 +25,10 @@ public class DutyDateGenerator {
         c.setTime(date);
 
         int actualMaximum = c.getActualMaximum(Calendar.DATE); //每个月的最后一天
-        //int actualMinimum = c.getActualMinimum(Calendar.DATE); //每个月的第一天
 
-        //c.set(Calendar.DATE, actualMinimum);// 每个月的1号为值班起点
+        int theFisrtDateOfMonth = findTheFirstDateOfMonth(c); //每个月的第一个工作日
+
+        c.set(Calendar.DATE, theFisrtDateOfMonth);// 每个月的1号为值班起点
 
         list.add(c.getTime());
 
@@ -40,7 +38,7 @@ public class DutyDateGenerator {
 
             return c.getTime();
         })
-                .limit(actualMaximum - 1)
+                .limit(actualMaximum - theFisrtDateOfMonth)
                 .collect(Collectors.toList());
 
         list.addAll(list2); //合并集合
@@ -112,6 +110,35 @@ public class DutyDateGenerator {
                 .anyMatch(t ->
                         date.getTime() >= t.getFrom() && date.getTime() <= t.getTo()
                 );
+    }
+
+    public static int findTheFirstDateOfMonth(Calendar c){
+        int month = c.get(Calendar.MONTH);//生成值班表的月份
+        List<Holiday> holiday = LegalHoliday.getInstance().getHoliday();
+        Optional<Holiday> first = holiday.stream().filter(t -> {
+            long to = t.getTo();
+            Calendar instance = Calendar.getInstance();
+            instance.setTimeInMillis(to);
+            int to_month = instance.get(Calendar.MONTH);
+
+            long from = t.getFrom();
+            instance.setTimeInMillis(from);
+            int from_month = instance.get(Calendar.MONTH);
+            /**
+             * 放假持续到第二个月
+             */
+            return from_month == month - 1 && to_month == month;
+        }).sorted((t1, t2) -> {
+            return (int) (t1.getTo() - t2.getTo());
+        }).findFirst();
+
+        if (first.isPresent()) {
+            long to = first.get().getTo();
+            Calendar instance = Calendar.getInstance();
+            instance.setTimeInMillis(to);
+            return instance.get(Calendar.DATE) + 1;
+        }
+        return 1;
     }
 
 

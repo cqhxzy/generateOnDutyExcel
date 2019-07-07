@@ -26,7 +26,7 @@ public class PropertyUtil {
 
 	public static void saveObj(String key, String  value){
 		prop.setProperty(key, value);
-		save("更新" + key);
+		save("update" + key);
 	}
 
 	private static void save(String comments){

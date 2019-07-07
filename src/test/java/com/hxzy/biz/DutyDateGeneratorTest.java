@@ -27,4 +27,12 @@ public class DutyDateGeneratorTest {
         boolean workOnHoliday = DutyDateGenerator.isWorkOnHoliday(c.getTime());
         System.out.println(workOnHoliday);
     }
+
+    @Test
+    public void findTheFisrtDateOfMonth(){
+        Calendar instance = Calendar.getInstance();
+        instance.set(2019, Calendar.SEPTEMBER, 6);
+        int outTheFisrtDateOfMonth = DutyDateGenerator.findTheFisrtDateOfMonth(instance);
+        System.out.println(outTheFisrtDateOfMonth);
+    }
 }
