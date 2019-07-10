@@ -2,10 +2,12 @@ package com.hxzy.util;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
 public class CommonUtil {
+    private static final Calendar cal = Calendar.getInstance();
 
     public static Collection<String> getValues(String path){
         InputStream resourceAsStream = CommonUtil.class.getResourceAsStream(path);
@@ -26,5 +28,9 @@ public class CommonUtil {
             }
         }
         return list;
+    }
+    public static Calendar getCalendarInstance(){
+        cal.clear();
+        return cal;
     }
 }

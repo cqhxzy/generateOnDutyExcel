@@ -1,6 +1,7 @@
 package com.hxzy.biz.workDays;
 
 import com.hxzy.bean.Holiday;
+import com.hxzy.util.CommonUtil;
 import com.hxzy.util.StringUtil;
 
 import java.util.*;
@@ -19,7 +20,7 @@ public class DutyDateGenerator {
 
         List<Date> list = new ArrayList<>();
 
-        Calendar c = Calendar.getInstance(); //获取当前日期
+        Calendar c = CommonUtil.getCalendarInstance(); //获取当前日期
 
         Date date = StringUtil.formatStr2DateMonth(dateStr); //将日期字符串转换为日期
         c.setTime(date);
@@ -54,7 +55,7 @@ public class DutyDateGenerator {
     }
 
     private static boolean isNotWeekDay(Date date) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = CommonUtil.getCalendarInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY;
     }
@@ -67,7 +68,7 @@ public class DutyDateGenerator {
                         //此处使用原型模式得到holiday对象
                         //法定假日后的上班时间为配置文件中to对应日期+1天
                         Holiday clone = t.clone();
-                        Calendar instance = Calendar.getInstance();
+                        Calendar instance = CommonUtil.getCalendarInstance();
                         instance.setTimeInMillis(clone.getTo());
                         instance.add(Calendar.DATE, 1);
                         clone.setTo(instance.getTimeInMillis());
@@ -89,18 +90,20 @@ public class DutyDateGenerator {
         return workDay.stream()
                 .filter(t ->
                         {
-                            Calendar c1 = Calendar.getInstance();
-                            Calendar c2 = Calendar.getInstance();
-                            Calendar c3 = Calendar.getInstance();
-
+                            Calendar c1 = CommonUtil.getCalendarInstance();
                             c1.setTime(date);
-                            c2.setTimeInMillis(t.getFrom());
-                            c3.setTimeInMillis(t.getTo());
-                            
                             int date_month = c1.get(Calendar.MONTH);
+
+
+                            Calendar c2 = CommonUtil.getCalendarInstance();
+                            c2.setTimeInMillis(t.getFrom());
                             int c2_month = c2.get(Calendar.MONTH);
+
+
+                            Calendar c3 = CommonUtil.getCalendarInstance();
+                            c3.setTimeInMillis(t.getTo());
                             int c3_month = c3.get(Calendar.MONTH);
-                            
+
                             return date_month == c2_month && date_month == c3_month || date_month == c2_month && date_month == c3_month - 1; 
                             
                             //return c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) || c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) - 1;
@@ -116,7 +119,7 @@ public class DutyDateGenerator {
         List<Holiday> holiday = LegalHoliday.getInstance().getHoliday();
         Optional<Holiday> first = holiday.stream().filter(t -> {
             long to = t.getTo();
-            Calendar instance = Calendar.getInstance();
+            Calendar instance = CommonUtil.getCalendarInstance();
             instance.setTimeInMillis(to);
             int to_month = instance.get(Calendar.MONTH);
 
@@ -131,7 +134,7 @@ public class DutyDateGenerator {
 
         if (first.isPresent()) {
             long to = first.get().getTo();
-            Calendar instance = Calendar.getInstance();
+            Calendar instance = CommonUtil.getCalendarInstance();
             instance.setTimeInMillis(to);
             return instance.get(Calendar.DATE) + 1;
         }
